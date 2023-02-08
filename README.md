@@ -64,4 +64,27 @@ python .\manage.py startapp findings
 
 ![image](https://user-images.githubusercontent.com/73948790/217395540-42e27460-9b14-4a26-9776-b6d0ecd754b8.png)
 
-3 - Dentro da nossa nova app no ficheiro ```models.py``` vamos criar um novo modelo.
+3 - Dentro da nossa nova app no ficheiro ```models.py``` vamos criar um novo modelo chamado ```FindingsModel```, que deve conter , os seguintes campos :
+
+       ● id -> The finding id
+  
+       ● target_id -> String (unique Base58 value)
+  
+       ● definition_id -> String (unique Base58 value)
+  
+       ● scans -> Array of strings (unique Base58 value)
+  
+       ● url -> String
+  
+       ● path -> String
+  
+       ● method -> string
+   
+Findings são problemas de segurança encontrados durante o scan da app/api. 
+
+Cada finding vem com os dados recolhidos durante o scan, uma descrição da vulnerabilidade e uma sugestão de como corrigi-la.
+
+O nosso diagrama de UML para o presente modelo, fica assim :
+
+![image](https://user-images.githubusercontent.com/73948790/217601394-8c83a4d6-35aa-4d66-8f91-fb9b66db7ffd.png)
+
