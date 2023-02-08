@@ -1,14 +1,14 @@
-# probely_django
+# Index
 
 Índice das tarefas com o processo de resolução passo a passo.
 
-- [Task 1](#Task1)
+- [Task 1](#Task1) _Start a new Django project using a sqlite database._
 
-- [Task 2](#Task2)
+- [Task 2](#Task2) _Create a app and add a Finding model to store the objects described_
 
-- [Task 3](#Task1)
+- [Task 3](#Task1) _Create a Django command that retrieves all the findings for a given id and stores them in the database._
 
-- [Task 3](#Task1)
+- [Task 3](#Task1) _Create a Django view to list and filter findings._
 
 <a id="Task1"></a>
 
