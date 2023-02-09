@@ -97,27 +97,24 @@ Em alternativa, se o campo "scans" não fosse obrigatório no nosso ```findingsM
 
 O nosso modelo fica assim:
 ```
-       from django.db import models
+	class ScanModel(models.Model):
+	   id = models.AutoField(primary_key=True)
+	   value = models.CharField(max_length=100)
 
-       # Create your models here.
-       class Scan(models.Model):
-           id = models.AutoField(primary_key=True)
-           value = models.CharField(max_length=100, unique=True)
+	   def __str__(self):
+		   return self.value
 
-           def __str__(self):
-               return self.value
+	class FindingsModel(models.Model):
+	   id = models.AutoField(primary_key=True)
+	   target_id = models.CharField(max_length=100)
+	   definition_id = models.CharField(max_length=100)
+	   scans = models.ManyToManyField(ScanModel)
+	   url = models.CharField(max_length=200)
+	   path = models.CharField(max_length=200)
+	   method = models.CharField(max_length=10)
 
-       class FindingsModel(models.Model):
-           id = models.AutoField(primary_key=True)
-           target_id = models.CharField(max_length=100, unique=True)
-           definition_id = models.CharField(max_length=100, unique=True)
-           scans = models.ManyToManyField(Scan)
-           url = models.CharField(max_length=200)
-           path = models.CharField(max_length=200)
-           method = models.CharField(max_length=10)
-
-           def __str__(self):
-               return self.target_id
+	   def __str__(self):
+		   return self.target_id
 ```       
 4 - Fazer as migrações e migrar os nossos novos modelos.
 
