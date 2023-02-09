@@ -8,7 +8,7 @@
 
 - [Task 3](#Task3) - _Create a Django command that retrieves all the findings for a given id and stores them in the database._
 
-- [Task 3](#Task1) - _Create a Django view to list and filter findings._
+- [Task 4](#Task4) - _Create a Django view to list and filter findings._
 
 <a id="Task1"></a>
 
@@ -128,3 +128,8 @@ O nosso modelo fica assim:
 # Task 3
 
 1 - Vamos criar uma nova directoria na nossa app ```findings``` : management/commands.
+
+
+<a id="Task4"></a>
+
+# Task 4
