@@ -143,12 +143,16 @@ import json
 class Command(BaseCommand):
     help = 'Fetch the API findings from the "List Findings" endpoint'
     
-    def handle(self, *args, **options):
-        results = self.make_api_call("https://api.probely.com/targets/Tt2f8EyPSTwq/findings/")
-        # Extract the findings from the response
+    def add_arguments(self, parser):
+        parser.add_argument('target_id', type=str, help='The target ID of the scan', default="Tt2f8EyPSTwq")
+    
+    def handle(self, *args, **kwargs):
+        target_id = kwargs['target_id']
+        results = self.make_api_call(target_id)
         self.save_to_db(results)
     
-    def make_api_call(self, url):
+    def make_api_call(self, target_id : str) -> dict:
+        url = f"https://api.probely.com/targets/{target_id}/findings/"
         headers  = {
             "Content-Type": "application/json",
             "Authorization": f"JWT {settings.PROBELY_API_KEY}"
@@ -156,11 +160,11 @@ class Command(BaseCommand):
         #Make the request and get the response
         response = requests.get(url, headers=headers)
         if response.status_code != 200:
-            raise CommandError(f"Was expecting 200 status code from API, instead got{response.status_code}")
+            raise CommandError(f"Was expecting 200 status code from API, instead got {response.status_code}")
         results = response.json().get("results")
         return results
     
-    def save_to_db(self, results):
+    def save_to_db(self, results : dict) -> None:
         for finding in results:
             try:
                 finding_id = finding.get("id")
