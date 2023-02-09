@@ -1,0 +1,4 @@
+venv/
+backend/.env
+backend/backend/output.json
+README.md
