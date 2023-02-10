@@ -26,7 +26,8 @@ class FindingsList(APIView):
 
         # Serialize findings and respond
         serializer = FindingsSerializer(findings, many=True)
-        if len(serializer.data) == 0:
+        findings_count = len(serializer.data)
+        if findings_count == 0:
             return Response({'Message' : 'No content found'},status=status.HTTP_404_NOT_FOUND)
         else:
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({'count': findings_count, 'results': serializer.data}, status=status.HTTP_200_OK)

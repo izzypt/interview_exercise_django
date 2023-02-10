@@ -17,3 +17,4 @@ class FindingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FindingsModel
         fields = ('id', 'definition_id', 'target_id', 'url', 'path', 'method', 'scans')
+        
