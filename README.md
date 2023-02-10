@@ -1,6 +1,6 @@
 # Índice
 
-Índice das tarefas com o processo de resolução passo a passo.
+Índice das tarefas com o processo de resolução passo a passo (quase terminado.)
 
 - [Task 1](#Task1) - _Start a new Django project using a sqlite database._
 
@@ -105,15 +105,22 @@ O nosso modelo fica assim:
 		   return self.value
 
 	class FindingsModel(models.Model):
-	   id = models.AutoField(primary_key=True)
-	   target_id = models.CharField(max_length=100)
-	   definition_id = models.CharField(max_length=100)
-	   scans = models.ManyToManyField(ScanModel)
-	   url = models.CharField(max_length=200)
-	   path = models.CharField(max_length=200)
-	   method = models.CharField(max_length=10)
+		HTTP_METHODS = (
+			('GET', 'GET'),
+			('POST', 'POST'),
+			('PUT', 'PUT'),
+			('PATCH', 'PATCH'),
+			('DELETE', 'DELETE'),
+		)
+		id = models.AutoField(primary_key=True)
+		target_id = models.CharField(max_length=100)
+		definition_id = models.CharField(max_length=100)
+		scans = models.ManyToManyField(ScanModel)
+		url = models.URLField()
+		path = models.CharField(max_length=200)
+		method = models.CharField(max_length=10, choices=HTTP_METHODS)
 
-	   def __str__(self):
+		def __str__(self):
 		   return self.target_id
 ```       
 4 - Fazer as migrações e migrar os nossos novos modelos.
@@ -204,3 +211,78 @@ class Command(BaseCommand):
 <a id="Task4"></a>
 
 # Task 4
+1 - Vamos criar os urls, as views e os serializers necessários para servir os dados que guardámos na BD.
+
+2 - No nossa directoria mãe , importamos os url que vamos definir na nossa ```findings``` app.
+```
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('findings/', include('findings.urls')),
+]
+```
+
+3 - Vamos definir os URLS que acabámos de importar no ficheiro ```urls.py``` da nossa app.
+```
+from django.urls import path, include
+from .views import FindingsList
+
+urlpatterns = [
+    path('list/', FindingsList.as_view(), name='findings_list'),
+]
+```
+4 - Vamos criar os serializers responsáveis por fazerem parse dos nossos dados no ficheiro ```serializers.py``` dentro da nossa app.
+```
+from rest_framework import serializers
+from findings.models import FindingsModel, ScanModel
+
+class ScanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScanModel
+        fields = ('value',)
+    
+    def to_representation(self, instance):
+        # ModelSerializer serializes a model instance to a dictionary-like object, we need to override that behavior because we want to return a string for each scan.
+        # to_representation allows to define how the object should be serialized and what data should be included in the serialized representation.
+        return instance.value
+
+class FindingsSerializer(serializers.ModelSerializer):
+    scans = ScanSerializer(many=True)
+    
+    class Meta:
+        model = FindingsModel
+        fields = ('id', 'definition_id', 'target_id', 'url', 'path', 'method', 'scans')
+```
+
+5- Por fim , necessitamos da nossa view que é responsável por lidar com o pedido que for enviado para o caminho especificado:
+
+```
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from findings.models import FindingsModel, ScanModel
+from .serializers import FindingsSerializer
+
+
+# Create your views here.
+class FindingsList(APIView):
+    def get(self, request, format=None):
+        # Get query parameters if any
+        definition_id = request.GET.get('definition_id')
+        scan_value = request.GET.get('scan_value')
+        
+        # Get all findings
+        findings = FindingsModel.objects.all()
+        if definition_id:
+            findings = findings.filter(definition_id=definition_id)
+        if scan_value:
+            findings = findings.filter(scans__value=scan_value)
+
+        # Serialize findings and respond
+        serializer = FindingsSerializer(findings, many=True)
+        if len(serializer.data) == 0:
+            return Response({'Message' : 'No content found'},status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(serializer.data, status=status.HTTP_200_OK)
+```
