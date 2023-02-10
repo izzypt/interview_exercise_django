@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = 'Fetch the API findings from the "List Findings" endpoint'
     
     def add_arguments(self, parser):
-        parser.add_argument('target_id', type=str, help='The target ID of the scan', default="Tt2f8EyPSTwq")
+        parser.add_argument('--target_id', type=str, help='The target ID of the scan', default="Tt2f8EyPSTwq")
     
     def handle(self, *args, **kwargs):
         target_id = kwargs['target_id']
