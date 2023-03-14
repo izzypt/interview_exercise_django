@@ -1,6 +1,6 @@
 # Índice
 
-Índice das tarefas com o processo de resolução passo a passo (quase terminado.)
+Índice das tarefas com o processo de resolução passo a passo
 
 - [Task 1](#Task1) - _Start a new Django project using a sqlite database._
 
