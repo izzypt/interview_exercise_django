@@ -16,7 +16,7 @@
 
 1 - Criar uma nova directoria para o projecto.
 ```
->>> mkdir probely_exercise
+>>> mkdir intv_exercise
 ```
 2 - Criar um ambiente virtual para o projecto de forma a manter as dependências isoladas.
 ```
